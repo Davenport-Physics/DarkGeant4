@@ -27,9 +27,12 @@
 #include "G4SystemOfUnits.hh"
 #include "G4ParticleTable.hh"
 
+#include <cmath>
+
 PrimaryGeneratorAction::PrimaryGeneratorAction(vector<FourVector> *FourVectors,
                                                string DarkGeantOutputPath,
-                                               int NumberOfEvents) 
+                                               int NumberOfEvents,
+                                               DetectorComponent *World) 
 
  : G4VUserPrimaryGeneratorAction()
 
@@ -44,6 +47,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(vector<FourVector> *FourVectors,
 	this->FourVectors = FourVectors;
 	
 	this->NumberOfEvents = NumberOfEvents;
+	this->World = World;
 	
 }
 
@@ -72,7 +76,16 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
 	
 	int i = this->PresentIndex;
 	
+	DetectorComponent_Box *WorldBox = static_cast<DetectorComponent_Box *>(this->World);
+	
 	for (size_t prtcle = 0; prtcle < this->FourVectors[i].size(); prtcle++) {
+
+		if (fabs(this->FourVectors[i][prtcle].X) > WorldBox->half_x)
+			continue;
+		if (fabs(this->FourVectors[i][prtcle].Y) > WorldBox->half_y)
+			continue;
+		//if (fabs(this->FourVectors[i][prtcle].Z) > WorldBox->half_z)
+		//	continue;
 
 		G4ParticleDefinition *Def = GetParticleDefinition(this->FourVectors[i][prtcle]);
 		this->FourVectors[i][prtcle].T = this->FourVectors[i][prtcle].E * GeV - Def->GetPDGMass();
@@ -82,7 +95,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event *event) {
 		this->ParticleGun->SetParticlePosition(G4ThreeVector(
                                            this->FourVectors[i][prtcle].X * m,
                                            this->FourVectors[i][prtcle].Y * m,
-                                           this->FourVectors[i][prtcle].Z * m));
+                                           0.0 * m));
                                                
 		this->ParticleGun->SetParticleMomentumDirection(G4ThreeVector(
                                              this->FourVectors[i][prtcle].P_x,
