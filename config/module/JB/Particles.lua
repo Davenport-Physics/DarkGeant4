@@ -44,11 +44,6 @@ function BoxMullerTransform()
 	
 	U_2 = math.random()
 
-	--[[
-	
-		This condition is set to force a radius of 33.0 or less.
-	
-	--]]
 	repeat
 		U_1 = math.random()
 	until U_1 >= 3.726653-6
