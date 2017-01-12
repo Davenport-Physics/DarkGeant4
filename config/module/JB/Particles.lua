@@ -46,9 +46,10 @@ function BoxMullerTransform()
 
 	repeat
 		U_1 = math.random()
-	until U_1 >= 3.726653-6
+	until U_1 >= 9.180138e-24
 
-	return math.sqrt(-2 * math.log(U_1)) * math.cos(2 * math.pi * U_2)
+	return math.abs(math.sqrt(-2 * math.log(U_1)) * math.cos(2 * math.pi * U_2)) - 5.15
+	
 
 end
 
