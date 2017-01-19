@@ -181,4 +181,8 @@ DetectorComponent_1 = { Material = "Liquid Argon",
                         Outer_Radius = 3.0,
                         Half_Length  = 1,
                         Position = { 0, 0, 0 },
-                        Inside = "World" }       
+                        Inside = "World" }
+                        
+
+}
+                             
