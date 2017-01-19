@@ -192,33 +192,32 @@ void ParticlesConfigLua::Initialize_GenericFourVector() {
 		
 	}
 	
-	for (int i = 0;i < this->NumberOfEvents;i++) {
+	int Iterations = this->NumberOfEvents/this->PrimariesPerEvent;
+	if (this->NumberOfEvents % this->PrimariesPerEvent != 0)
+		Iterations++;
 	
-		this->FourVectors[i].push_back(Vector);
+		
+	for (int i = 0;i < Iterations;i++) {
+	
+		for (int j = 0;j < this->PrimariesPerEvent;j++) {
+		
+			this->FourVectors[i].push_back(Vector);
+		
+		}
 		
 	}
+	
+	
 	
 }
 
 void ParticlesConfigLua::Initialize_FourVector_Vector() {
 
-	//if (this->PrimariesPerEvent == 1) {
+	int AmountOfVectors = this->NumberOfEvents/this->PrimariesPerEvent;
+	if (this->NumberOfEvents % this->PrimariesPerEvent != 0)
+		AmountOfVectors++;
 		
-		this->FourVectors = new vector<FourVector>[this->NumberOfEvents];
-		
-	/*} else {
-		
-		if (this->NumberOfEvents % this->PrimariesPerEvent == 0) {
-		
-			this->FourVectors = new vector<FourVector>[this->NumberOfEvents/this->PrimariesPerEvent];
-			
-		} else {
-			
-			
-			
-		}
-		
-	}*/
+	this->FourVectors = new vector<FourVector>[AmountOfVectors];
 	
 }
 
