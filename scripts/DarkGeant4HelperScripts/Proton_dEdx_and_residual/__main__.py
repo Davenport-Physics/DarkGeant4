@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 #  dedx.py
@@ -22,21 +22,30 @@
 #  
 #  
 
+from scipy.stats import gaussian_kde 
+
 import matplotlib.pyplot as plt
 import pdb
+
+from multiprocessing import Process
 
 def main(args):
 	
 	plt.rcParams['font.size'] = 24.0
-	FileBuffer = GetFileBuffer()
 	
-	lists = GetLists(FileBuffer)
+	
+	lists = GetLists()
 	
 	dedx = GenerateDeDx(lists[0], lists[1])
 	residual = GenerateResidual(lists[0], lists[1], lists[2])
 	
+	ProcessResidual = Process(target = plotdedx_residualrange, args=(dedx, residual))
+	ProcessResidual.start()
+	
 	plotdedx(dedx)
-	plotdedx_residualrange(dedx, residual)
+	ProcessResidual.join()
+	
+	#plotdedx_residualrange(dedx, residual)
 	
 	return 0
 	
@@ -45,6 +54,7 @@ def plotdedx(dedx):
 	dedx_1d_array = Generate_1d_array_from_2d(dedx)
 	
 	plt.title("Proton stopping power in Liquid Argon volume")
+	plt.ylabel("Counts")
 	plt.xlabel("dE/dx (MeV/cm)")
 	plt.hist(dedx_1d_array, 5000)
 	plt.show()
@@ -62,17 +72,33 @@ def plotdedx_residualrange(dedx, residual):
 	plt.xlabel("residual range (cm)")
 	plt.ylabel("dE/dx MeV/cm")
 	
-	plt.hist2d(dedx_1d_array, residual_1d_array, (500, 500), cmap=plt.cm.jet)
+	
+	
+	plt.hist2d(dedx_1d_array, residual_1d_array, (1500, 1500), cmap=CustomColorMap())
 	plt.colorbar()
 	plt.show()
 	plt.close()
 	
+def CustomColorMap():
+	
+	colormap = plt.cm.jet
+	
 	'''
-	plt.plot(residual_1d_array, dedx_1d_array, 'ro')
-	plt.show()
-	plt.close()
+	
+	Equivalent code
+	
+	cmaplist = []
+	for i in range(colormap.N):
+		cmaplist.append(colormap(i))
+		
+		
 	'''
-	 
+	cmaplist = [colormap(i) for i in range(colormap.N)]
+	
+	cmaplist[0] = (1.0, 1.0, 1.0, 1.0)
+	colormap = colormap.from_list('Custom cmap', cmaplist, colormap.N)
+	
+	return colormap
 	
 def Generate_1d_array_from_2d(array2d):
 	
@@ -84,27 +110,28 @@ def Generate_1d_array_from_2d(array2d):
 			
 	return array1d
 	
-def GetLists(FileBuffer):
+def GetLists():
 	
+	fp = open("DarkGeantOutput.dat")
 	de = []
 	dx = []
 	track = []
 	
-	print(len(FileBuffer[0]))
-	print(len(FileBuffer))
-	print(FileBuffer[3])
-	
-	#pdb.set_trace()
 	AtPrimary = False
 	skip = 0
-	for idx in range(3, len(FileBuffer)):
+	initialcount = 0
+	for line in fp:
+		
+		if initialcount < 2:
+			initialcount += 1
+			continue
 		
 		if skip != 0:
 			
 			skip -= 1
 			continue
 			
-		if "proton," in FileBuffer[idx]:
+		if "proton," in line:
 			
 			de.append([])
 			dx.append([])
@@ -113,17 +140,19 @@ def GetLists(FileBuffer):
 			AtPrimary = True
 			skip = 2
 			
-		elif ("**" in FileBuffer[idx] or len(FileBuffer[idx]) == 1) and AtPrimary is True:
+		elif ("**" in line or len(line) == 1) and AtPrimary is True:
 			
 			AtPrimary = False
 			
-		elif AtPrimary is True and "DetectorComponent_1 hIon" in FileBuffer[idx]:
+		elif AtPrimary is True and "DetectorComponent_1 hIon" in line:
 			
-			de[-1].append(float(FileBuffer[idx].split()[5]))
-			dx[-1].append(float(FileBuffer[idx].split()[6])/10.0)
-			track[-1].append(float(FileBuffer[idx].split()[7])/10.0)
+			de[-1].append(float(line.split()[5]))
+			dx[-1].append(float(line.split()[6])/10.0)
+			track[-1].append(float(line.split()[7])/10.0)
 				
 		#print(AtPrimary)
+		
+	fp.close()
 	return [de, dx, track]
 	
 def GenerateDeDx(de, dx):
@@ -171,12 +200,20 @@ def GetAveragededx(dedx):
 		
 	return Sum/len(dedx)
 
-def GetFileBuffer():
+def GetFileBuffer(args):
+	
+	FileToOpen = "DarkGeantOutput.dat"
+	if (len(args) != 1):
+		FileToOpen = args[1]
 	
 	File = []
-	with open("DarkGeantOutput.dat", "r") as fp:
-		for line in fp:
-			File.append(line)
+	try:
+		with open(FileToOpen, "r") as fp:
+			for line in fp:
+				File.append(line)
+	except FileNotFoundError:
+		print("File not found")
+		exit(0)
 			
 	return File
 
