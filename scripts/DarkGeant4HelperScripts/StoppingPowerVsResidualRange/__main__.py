@@ -28,6 +28,9 @@ except ImportError:
 	print("ImportError: Is matplotlib for python3 installed?")
 	exit(0)
 	
+from scipy.stats import gaussian_kde
+import numpy as np
+
 FileToRead = "DarkGeantData"
 
 def main():
@@ -49,7 +52,7 @@ def main():
 	
 	PlotData(ResidualRange, dedx, "dE/dX vs residual range", 
 	"residual range (cm)", 
-	"dE/dX (MeV/cm)")
+	"dE/dx (MeV/cm)")
 	
 	PlotData(ResidualRange, Energy, "E vs residual range",
 	"residual range (cm)",
@@ -175,7 +178,8 @@ def GetPositionListFromFileContents(File):
 			
 			if InsideDetector and IonizedDetector:
 				PositionChunk.append(File[i].split())
-				
+				from matplotlib.colors import LogNorm
+
 	# Fixes a super annoying bug
 	if len(PositionChunk) != 0:
 		Position.append(list(PositionChunk))
@@ -264,11 +268,47 @@ def DeleteBadIndicies(dedx, ResidualRange):
 def PlotData(XAxis, YAxis, title, xlabel, ylabel):
 
 	plt.title(title)
-	plt.rcParams['font.size'] = 16.0
+	plt.rcParams['font.size'] = 24.0
 	plt.xlabel(xlabel)
 	plt.ylabel(ylabel)
-	plt.plot(XAxis, YAxis, 'go')
+	
+	'''
+	xy = np.vstack([XAxis,YAxis])
+	z = gaussian_kde(xy)(xy)
+	
+	plt.subplots().scatter(XAxis, YAxis, c=z, s=100, edgecolor='')
+	
+	'''
+	
+	plt.hist2d(XAxis, YAxis, (1500, 1500), cmap=CustomColorMap())
+	plt.colorbar()
 	plt.show()
+	plt.close()
+	
+	
+	#plt.plot(XAxis, YAxis, 'go')
+	#plt.show()
+	
+def CustomColorMap():
+	
+	colormap = plt.cm.jet
+	
+	'''
+	
+	Equivalent code
+	
+	cmaplist = []
+	for i in range(colormap.N):
+		cmaplist.append(colormap(i))
+		
+		
+	'''
+	cmaplist = [colormap(i) for i in range(colormap.N)]
+	
+	cmaplist[0] = (1.0, 1.0, 1.0, 1.0)
+	colormap = colormap.from_list('Custom cmap', cmaplist, colormap.N)
+	
+	return colormap
 	
 	
 def HandleArguments(argv):
