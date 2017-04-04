@@ -26,6 +26,64 @@
 
 #include "G4VUserPhysicsList.hh"
 
+struct Physics_Processes {
+	
+	
+	// Photon processes
+	bool GammaConversion;
+	bool PhotoElectricEffect;
+	bool CompotonScattering;
+	bool RayleighScattering;
+	bool GammaConversionToMuons;
+	
+	//Electron Positron processes
+	bool eIonisation;
+	bool eBremsstrahlung;
+	bool ePairProduction;
+	bool eMultipleScattering;
+	bool eplusAnnihilation;
+	
+	bool AnnihiToMuPair;
+	bool eeToHadrons;
+	
+	//Muon processes
+	bool MuIonisation;
+	bool MuBremsstrahlung;
+	bool MuPairProduction;
+	bool MuMultipleScattering;
+	
+	// Hadron ion processes
+	bool hIonisation;
+	bool ionIonisation;
+	bool hhIonisation;
+	bool mplIonisation;
+	bool hMultipleScattering;
+	bool gBremsstrahlung;
+	bool hPairProduction;
+	
+	//Coulomb scattering processes
+	//Not really sure what's up here?
+	bool CoulombScattering;
+	bool ScreenedNuclearRecoil;
+	
+	//Polarized electron and gamma beams
+	bool PolarizedCompton;
+	bool PolarizedGammaConversion;
+	bool PolarizedPhotoElectricEffect;
+	bool ePolarizedBremsstrahlung;
+	bool ePolarizedIonisation;
+	bool eplusPolarizedAnnihilation;
+	
+	//X-rays and optical protons production by charged particles
+	bool SynchrotronRadiation;
+	bool TransitionRadiation;
+	bool Cerenkov;
+	bool Scintillation;
+	
+	//TODO not done
+};
+
+
 class PhysicsList : public G4VUserPhysicsList {
 	
 	public:
