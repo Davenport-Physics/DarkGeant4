@@ -218,7 +218,6 @@ G4ThreeVector LuaInstance::GetG4ThreeVector(string TableName, double units) {
 	return G4ThreeVector(ThreeVecArray[0] * units, 
                          ThreeVecArray[1] * units, 
                          ThreeVecArray[2] * units);
-	
 }
 
 /*

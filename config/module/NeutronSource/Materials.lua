@@ -1,12 +1,3 @@
-
-
---[[
-
-	* Number_Of_Materials 
-	
-		Must always be defined and must be an integer
-
-]]--
 Number_Of_Materials = 2
 
 --[[
@@ -51,23 +42,13 @@ Number_Of_Materials = 2
 		
 	
 ]]--
+
 Material_1 = { G4Name = "G4_AIR" }
-Material_2 = { G4Name = "G4_H" }       
+            
               
---[[Material_2 = { Name = "Liquid Argon",
-               Number_Of_Protons = 18,
-               Atomic_Mass = 39.95,
-               Density = 1.390 }--]]
+Material_2 = { G4Name = "G4_lAr" }               
                
-               
-               
---[[
 
-	* Number_Of_Composite_Materials
-	
-		Must always be defined and must be an integer.
-
---]]
 Number_Of_Composite_Materials = 0
 
 --[[
@@ -86,8 +67,3 @@ Number_Of_Composite_Materials = 0
 		mass.
 
 --]]
-Composite_Material_1 = { Name = "CompositeTest",
-                         Density = 1.375, -- Arbitrary number
-                         Number_Of_Components = 2,
-                         Component_1 = {Material = "G4_AIR"      , Fractional_Mass = .1},
-                         Component_2 = {Material = "Liquid Argon", Fractional_Mass = .9}}

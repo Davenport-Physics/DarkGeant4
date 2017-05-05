@@ -35,9 +35,12 @@ class G4Material;
 #include "G4RotationMatrix.hh"
 #include "G4Transform3D.hh"
 #include "G4ThreeVector.hh"
+#include "G4SystemOfUnits.hh"
 
 // C/C++ headers
 #include <vector>
+#include <string>
+using namespace std;
 
 //User Headers
 #include "Material.hh"
@@ -215,6 +218,8 @@ struct DetectorComponent_vars {
 	VolumeType Type;
 	
 	G4ThreeVector Position;
+	G4ThreeVector MagneticField;
+	G4ThreeVector ElectricField;
 	G4Colour colour;
 	G4LogicalVolume *LogicalVolume;
 	Material *DetectorComponentMaterial;
@@ -264,6 +269,8 @@ class DetectorComponent {
 		
 		G4Colour colour;
 		G4ThreeVector Position;
+		G4ThreeVector MagneticField;
+		G4ThreeVector ElectricField;
 		G4LogicalVolume *LogicalVolume;
 		G4VisAttributes *attributes;
 		
@@ -284,6 +291,8 @@ class DetectorComponent {
 		
 		virtual void ConstructVolume() {;}
 		virtual bool WithinVolume(G4double x, G4double y, G4double z) {return true;}
+		
+		void SetEMField(string Name);
 		
 		void ApplyVisEffects();
 		void SetWireFrame();

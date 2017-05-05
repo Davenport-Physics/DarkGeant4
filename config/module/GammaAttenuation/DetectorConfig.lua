@@ -1,17 +1,3 @@
---[[
-
-	* Detector_Name
-	
-		"Anything you want" (Default value of "Detector")
-		
-	* Number_of_Detector_Components
-	
-		A *Integer* greater than 0
-		
-			default = nil. Will halt execution of program if not 
-			defined.
-
-]]--
 DetectorConfig = { Detector_Name = "Detector",
                   Number_of_Detector_Components = 1 }
 
@@ -156,14 +142,6 @@ DetectorConfig = { Detector_Name = "Detector",
 	
 		Default value of 0.0
 		
-	* Magnetic_Field
-		
-		Sets up a uniform magnetic field. Must be specified as a vector in tesla. Default is zero field.
-
-	*Electric_Field
-
-		Sets up a uniform electric field. Must be specified as a vector in kilovolt/cm. Default is zero field.
-	
 	* Inside
 	
 		"World"
@@ -175,24 +153,19 @@ DetectorConfig = { Detector_Name = "Detector",
 
 ]]--
 
-World = { Material = "G4_AIR",
+World = { Material = "G4_Galactic",
           Volume_Type = "Box",
           half_X = 20.0,
           half_Y = 20.0,
           half_Z = 20.0,
           Inside = "None",
-          Position = {0, 0, 0}, 
-	  Magnetic_Field = {0, 0, 0},
-	  Electric_Field = {0, 0, 0}}
+          Position = {0, 0, 0} }
 
-DetectorComponent_1 = { Material = "G4_AIR",
-          Volume_Type = "Box",
-          half_X = 2.0,
-          half_Y = 2.0,
-          half_Z = 2.0,
-          Inside = "World",
-          Position = {0, 0, 5}, 
-	  Magnetic_Field = {0, 0, 0},
-	  Electric_Field = {0, 0, 0}}
-
-
+DetectorComponent_1 = { Material = "G4_Pb",
+                        Volume_Type = "Box",
+                        half_X = 1,
+                        half_Y = 1,
+                        half_Z = (2.5/100)/2,
+                        Position = { 0, 0, 2.5/100 },
+                        Inside = "World",
+			wireframe = true }       

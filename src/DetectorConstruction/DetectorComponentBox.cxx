@@ -21,6 +21,7 @@
  * 
  */
 
+//User Headers
 #include "DetectorComponentBox.hh"
 
 //Geant4 Headers
@@ -85,5 +86,7 @@ bool DetectorComponent_Box::WithinVolume(G4double x, G4double y, G4double z) {
 	return true;
 	
 }
+
+
 
 

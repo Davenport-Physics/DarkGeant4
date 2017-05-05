@@ -28,6 +28,7 @@ class G4VSolid;
 class G4LogicalVolume;
 class G4VPhysicalVolume;
 class G4Material;
+class UniformEMField;
 
 //Geant4 Headers
 #include "G4Box.hh"
@@ -37,12 +38,16 @@ class G4Material;
 #include "G4ThreeVector.hh"
 #include "G4VUserDetectorConstruction.hh"
 
+#include "G4FieldManager.hh"
+#include "G4TransportationManager.hh"
+
 // C/C++ headers
 #include <vector>
 
 //User Headers
 #include "DetectorComponent.hh"
 #include "Material.hh"
+#include "UniformEMField.hh"
 
 using std::vector;
 
@@ -80,6 +85,8 @@ class DetectorConstructionV2 : public G4VUserDetectorConstruction {
 		void InitializeWorld();
 		void InitializeDetectorComponents();
 		void InitializePhysicalVolume();
+
+		void InitializeWorldEMField();
 		
 		void FindMaterial(DetectorComponent *Component);
 		

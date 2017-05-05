@@ -78,7 +78,7 @@ void DetectorConfigLuaInstance::Initialize_number_of_detector_components() {
                                 "Missing Number_of_Detector_Components"
                                 + string(" in DetectorConfig table."));
 	                            
-	if (this->Number_of_Dectector_Components <= 0) {
+	if (this->Number_of_Dectector_Components < 0) {
 	
 		cout << "You did not define the variable ";
 		cout << "Number_of_Detector_Components sufficiently.\n";
@@ -174,18 +174,57 @@ DetectorComponent_vars DetectorConfigLuaInstance::SetSharedAttributes(string Det
                                                 "Wireframe is false",
                                                 false);
                              
-	vars.Position = GetG4ThreeVector("Position", m);
+	vars.Position = GetG4ThreeVector("Position", 1.0);
+
+	/*
+	 * Look for magnetic field. If it's not specified, throw an exception.
+	 * Set MagneticField to {0, 0, 0}
+	 *
+	 * */
+
+	try {
+
+		vars.MagneticField = GetG4ThreeVector("Magnetic_Field", tesla);	
+
+	} catch(string e) {
+
+		if (DetectorComponentIndex == "0"){
+			cout << "No Magnetic Field specified for World. Magnetic Field set to (0,0,0).\n";
+		} else cout << "No Magnetic Field specified for DetectorComponent_" + DetectorComponentIndex + ". Magnetic Field set to (0,0,0).\n";
+
+		vars.MagneticField = G4ThreeVector(0,0,0);
 	
+	}
+
+	/*
+	 * Look for electric field. If it's not specified, throw an exception.
+	 * Set ElectricField to {0, 0, 0}
+	 *
+	 * */
+
+	try {
+
+		vars.ElectricField = GetG4ThreeVector("Electric_Field", kilovolt/cm);	
+
+	} catch(string e) {
+
+		if (DetectorComponentIndex == "0"){
+			cout << "No Electric Field specified for World. Electric Field set to (0,0,0).\n";
+		} else cout << "No Electric Field specified for DetectorComponent_" + DetectorComponentIndex + ". Electric Field set to (0,0,0).\n";
+
+		vars.ElectricField = G4ThreeVector(0,0,0);
+	
+	}
 	
 	try {
 		
-		vars.colour = GetG4ThreeVector("colour", 1);
+		vars.colour = GetG4ThreeVector("colour", 1.0);
 		
 	} catch (string e) {
 		
 		try {
 		
-			vars.colour = GetG4ThreeVector("color", 1);
+			vars.colour = GetG4ThreeVector("color", 1.0);
 			
 		} catch (string e) {
 		
