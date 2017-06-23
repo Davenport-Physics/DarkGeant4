@@ -24,11 +24,12 @@ find_package(Lua 5.2 REQUIRED)
 include_directories(${LUA_INCLUDE_DIR})
 message(${LUA_INCLUDE_DIR})
 
-
-find_package(OpenMP)
-if (OPENMP_FOUND)
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${OpenMP_CXX_FLAGS}")
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	find_package(OpenMP)
+	if (OPENMP_FOUND)
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${OpenMP_CXX_FLAGS}")
+		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${OpenMP_CXX_FLAGS}")
+	endif()
 endif()
 
 #----------------------------------------------------------------------------
@@ -53,15 +54,24 @@ file(GLOB_RECURSE headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #
 # Use by -DCMAKE_BUILD_TYPE=Debug/Release
 #
-
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fopenmp")
+
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fopenmp")
+else()
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+endif()
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
 add_executable(DarkGeant4 main.cxx ${sources} ${headers})
-target_link_libraries(DarkGeant4 -lGLU -ldl ${Geant4_LIBRARIES} ${LUA_LIBRARIES})
+
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	target_link_libraries(DarkGeant4 -lGLU -ldl ${Geant4_LIBRARIES} ${LUA_LIBRARIES})
+else()
+	target_link_libraries(DarkGeant4 ${Geant4_LIBRARIES} ${LUA_LIBRARIES})
+endif()
 
 add_custom_command(TARGET DarkGeant4 PRE_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
