@@ -8,11 +8,11 @@ Geant4.9.6 and lua5.2+ is required. Please be sure to have **lua5.2-dev** packag
 
 ## Supported Platforms
 
-RHEL 6/7, its derivatives and Ubuntu 16.04 are fully supported. Instructions on installing DarkGeant4 and Geant4.x can be found within the [wiki](https://github.com/Davenport-Physics/DarkGeant4/wiki/Compiling-and-Installing-Geant4.9.6) for the various platforms.
+RHEL 6/7, its derivatives and Ubuntu 16.04 are fully supported. Mac OSX 10.13.1 is also supported. Instructions on installing DarkGeant4 and Geant4.x can be found within the [wiki](https://github.com/Davenport-Physics/DarkGeant4/wiki/Compiling-and-Installing-Geant4.10.3.x) for the various platforms.
 
 Platforms not officially supported may still be able to run DG4, provided that the necessary dependencies are met.
 
-### Known unsupported working platforms
+### Known working but unsupported platforms
 
 Ubuntu 14.04    (cmake3 needs a ppa)
 
@@ -38,7 +38,7 @@ If you do not have Geant4 installed, please see the [wiki](https://github.com/Da
 ./DarkGeant4 -vis
 ```
 
-A window should be rendered on your screen with a basic cylindrical volume (Presently made out of liquid argon).
+A window should be rendered on your screen with a basic cube volume (Presently made out of liquid argon).
 
 To see some action happen on screen, select your terminal and press enter. The code is presently waiting for a carriage return before it executes the run phase.
 
